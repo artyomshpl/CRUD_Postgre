@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class CustomConfiguration {
+public class ConditionalBeanConfiguration {
 
     @Bean
     @ConditionalOnProperty(name = "custom.property.enabled", havingValue = "true")

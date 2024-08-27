@@ -1,9 +1,8 @@
 package com.shep.controllers;
 
-import com.shep.entities.Book;
-import com.shep.entities.Library;
-import com.shep.repositories.BookRepository;
-import com.shep.repositories.LibraryRepository;
+import com.shep.DTO.BookDTO;
+import com.shep.DTO.LibraryDTO;
+import com.shep.services.LibraryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,48 +13,35 @@ import java.util.List;
 public class LibraryController {
 
     @Autowired
-    private LibraryRepository libraryRepository;
-
-    @Autowired
-    private BookRepository bookRepository;
+    private LibraryService libraryService;
 
     @GetMapping
-    public List<Library> getAllLibraries() {
-        return libraryRepository.findAll();
+    public List<LibraryDTO> getAllLibraries() {
+        return libraryService.getAllLibraries();
     }
 
     @PostMapping
-    public Library createLibrary(@RequestBody Library library) {
-        return libraryRepository.save(library);
+    public LibraryDTO createLibrary(@RequestBody LibraryDTO libraryDTO) {
+        return libraryService.createLibrary(libraryDTO);
     }
 
     @GetMapping("/{id}")
-    public Library getLibraryById(@PathVariable Long id) {
-        return libraryRepository.findById(id).orElse(null);
+    public LibraryDTO getLibraryById(@PathVariable Long id) {
+        return libraryService.getLibraryById(id);
     }
 
     @PutMapping("/{id}")
-    public Library updateLibrary(@PathVariable Long id, @RequestBody Library libraryDetails) {
-        Library library = libraryRepository.findById(id).orElse(null);
-        if (library != null) {
-            library.setName(libraryDetails.getName());
-            return libraryRepository.save(library);
-        }
-        return null;
+    public LibraryDTO updateLibrary(@PathVariable Long id, @RequestBody LibraryDTO libraryDetails) {
+        return libraryService.updateLibrary(id, libraryDetails);
     }
 
     @DeleteMapping("/{id}")
     public void deleteLibrary(@PathVariable Long id) {
-        libraryRepository.deleteById(id);
+        libraryService.deleteLibrary(id);
     }
 
     @PostMapping("/{libraryId}/books")
-    public Book createBook(@PathVariable Long libraryId, @RequestBody Book book) {
-        Library library = libraryRepository.findById(libraryId).orElse(null);
-        if (library != null) {
-            book.setLibrary(library);
-            return bookRepository.save(book);
-        }
-        return null;
+    public BookDTO createBook(@PathVariable Long libraryId, @RequestBody BookDTO bookDTO) {
+        return libraryService.createBook(libraryId, bookDTO);
     }
 }
